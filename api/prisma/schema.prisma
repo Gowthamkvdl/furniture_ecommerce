@@ -14,6 +14,7 @@ model Customer {
   password  String
   createdAt DateTime @default(now())
   orders    Order[]
+  reviews  Review[]
 }
 
 model Seller {
@@ -26,6 +27,8 @@ model Seller {
   admin      Boolean  @default(false)
   products   Product[]
   createdAt  DateTime @default(now())
+  orders    Order[]
+
 }
 
 model Product {
@@ -33,23 +36,45 @@ model Product {
   title       String
   description String
   price       Float
+  stock       Int @default(0)
   image       String
+  category    String
   sellerId    String   @db.ObjectId
   seller      Seller   @relation(fields: [sellerId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   orders      Order[]
+  reviews     Review[]
 }
 
 model Order {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  customerId String   @db.ObjectId
-  productId  String   @db.ObjectId
-  quantity   Int      @default(1)
-  status     String   @default("pending")
-  total      Float
-  createdAt  DateTime @default(now())
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  customerId  String   @db.ObjectId
+  sellerId    String   @db.ObjectId
+  productId   String   @db.ObjectId
+  quantity    Int      @default(1)
+  status      String   @default("pending")
+  address     String 
+  total       Float
+  createdAt   DateTime @default(now())
+  title       String
+  customer    Customer @relation(fields: [customerId], references: [id])
+  seller      Seller   @relation(fields: [sellerId], references: [id])
+  product     Product  @relation(fields: [productId], references: [id])
+}
 
-  customer   Customer @relation(fields: [customerId], references: [id])
-  product    Product  @relation(fields: [productId], references: [id])
+
+model Review {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  comment       String
+  createdAt     DateTime @default(now())
+  customerName  String 
+
+  // Foreign    Keys
+  customerId    String
+  productId     String
+
+  // Relations
+  customer      Customer     @relation(fields: [customerId], references: [id])
+  product       Product  @relation(fields: [productId], references: [id])
 }

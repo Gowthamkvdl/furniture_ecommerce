@@ -1,8 +1,12 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter, createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  BrowserRouter,
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 import Home from "./routes/home/Home";
-import Layout from "./components/layout/Layout";
+import Layout, { AdminLayout, AuthLayout } from "./components/layout/Layout";
 import Shop from "./routes/shop/Shop";
 import Login from "./routes/login/Login";
 import Register from "./routes/register/Register";
@@ -12,6 +16,14 @@ import Add from "./routes/add/Add";
 import Edit from "./routes/edit/Edit";
 import ProductPage from "./routes/productPage/ProductPage";
 import AdminPanel from "./routes/adminPanel/AdminPanel";
+import {
+  adminLoader,
+  customerLoader,
+  productsLoader,
+  sellerLoader,
+  shopLoader,
+  singleProductLoader,
+} from "./lib/loader.js";
 
 function App() {
   const router = createBrowserRouter([
@@ -26,6 +38,7 @@ function App() {
         {
           path: "/shop",
           element: <Shop />,
+          loader: shopLoader,
         },
         {
           path: "/login",
@@ -35,29 +48,54 @@ function App() {
           path: "/register",
           element: <Register />,
         },
+
         {
-          path: "/customer",
-          element: <Customer />,
+          path: "/product/:id",
+          element: <ProductPage />,
+          loader: singleProductLoader,
         },
+
         {
-          path: "/seller",
-          element: <Seller />,
+          path: "/shop",
+          element: <Shop />,
+          loader: shopLoader,
         },
+      ],
+    },
+
+    {
+      path: "/",
+      element: <AuthLayout />,
+      children: [
         {
           path: "/add",
           element: <Add />,
         },
         {
-          path: "/edit",
+          path: "/seller",
+          element: <Seller />,
+          loader: sellerLoader,
+        },
+        {
+          path: "/edit/:id",
           element: <Edit />,
+          loader: productsLoader,
         },
         {
-          path: "/product",
-          element: <ProductPage />,
+          path: "/customer",
+          element: <Customer />,
+          loader: customerLoader,
         },
+      ],
+    },
+    {
+      path: "/admin",
+      element: <AdminLayout />,
+      children: [
         {
-          path: "/admin",
+          path: "",
           element: <AdminPanel />,
+          loader: adminLoader,
         },
       ],
     },

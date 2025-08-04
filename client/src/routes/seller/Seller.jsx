@@ -1,88 +1,144 @@
-import React, { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useContext, useState, useEffect } from "react";
+import { Link, Navigate, useLoaderData, useNavigate } from "react-router-dom";
 import "./seller.css";
 import { AuthContext } from "../../context/AuthContext";
+import apiRequest from "../../lib/apiRequest";
 
 const Seller = () => {
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const {currentUser, updateUser} = useContext(AuthContext)
+  const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const data = useLoaderData();
+
+  useEffect(() => {
+    if (data?.error === "unauthorized") {
+      alert("You are not authorized to view this page.");
+      navigate("/login"); // or wherever you want to redirect
+    }
+
+    if (data?.error === "server_error") {
+      alert("Something went wrong. Please try again later.");
+      navigate("/");
+    }
+  }, [data, navigate]);
+
+  // Use local state for products so we can update the UI dynamically
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState(data.orders || []);
+
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [showRemoveModal, setShowRemoveModal] = useState(false);  
+  const [showRemoveModal, setShowRemoveModal] = useState(false);
   const [productToRemove, setProductToRemove] = useState(null);
-  const navigate = useNavigate()
-  
 
-  const products = [
-    { name: "Rift Gogan Sofa", stock: 12, price: 2499, status: "Active" },
-    { name: "Wooden Dining Table", stock: 5, price: 7999, status: "Active" },
-  ];
-
-  const orders = [
-    {
-      id: "#2201",
-      product: "Classic Study Chair",
-      customer: "Kumar",
-      status: "Processing",
-    },
-    {
-      id: "#2202",
-      product: "Rift Gogan Sofa",
-      customer: "Ajay",
-      status: "Shipped",
-    },
-  ];
-
-  const handleViewOrder = (order) => {
-    setSelectedOrder(order);
-    setShowOrderModal(true);
-  };
+  useEffect(() => {
+    setProducts(data.products || []);
+  }, [data.products]);
 
   const handleRemoveProduct = (product) => {
     setProductToRemove(product);
     setShowRemoveModal(true);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("user")
-    localStorage.removeItem("token")
+  const removeProductConfirm = async () => {
+    try {
+      await apiRequest.delete(`/product/${productToRemove.id}`);
+      // Update UI immediately
+      setProducts((prev) =>
+        prev.filter((item) => item.id !== productToRemove.id)
+      );
+      setShowRemoveModal(false);
+      setProductToRemove(null);
+    } catch (error) {
+      console.error("Failed to delete product:", error);
+      alert("Something went wrong while deleting the product.");
+    }
+  };
 
-    navigate("/login")
-  }
-  
+  const handleDelever = async (orderId) => {
+    const order = orders.find((o) => o.id === orderId);
+
+    if (!order) {
+      alert("❌ Order not found.");
+      return;
+    }
+
+    if (order.status === "cancelled") {
+      alert(
+        "❌ Cannot mark as delivered. Order has been cancelled by the customer."
+      );
+      return;
+    }
+
+    if (order.status === "delivered") {
+      alert("⚠️ Order is already marked as delivered.");
+      return;
+    }
+
+    try {
+      await apiRequest.put(`/order/${orderId}`, {
+        status: "delivered",
+      });
+
+      // Update the UI
+      setOrders((prevOrders) =>
+        prevOrders.map((o) =>
+          o.id === orderId ? { ...o, status: "delivered" } : o
+        )
+      );
+
+      alert("✅ Order marked as delivered!");
+    } catch (err) {
+      console.error(err);
+      alert("❌ Failed to update order status.");
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
     <div className="container py-4">
       <h4 className="mb-4">Seller Dashboard</h4>
 
-      <div className="row">
-        <div className="col-md-6 mb-4">
-          <div className="card shadow-sm p-3">
-            <h5>Profile Info</h5>
-            <p>
-              <strong>Name:</strong> {(currentUser.name).toUpperCase()}
-            </p>
-            <p>
-              <strong>Email:</strong> {currentUser.email}
-            </p>
-            <p>
-              <strong>Store:</strong> {currentUser.shopName}
-            </p>
-          </div>
-        </div>
-        <div className="col-md-6 mb-4">
-          <div className="card shadow-sm p-3">
-            <h5>Change Password</h5>
-            <button
-              className="btn btn-sm btn-outline-success mt-2"
-              onClick={() => setShowPasswordModal(true)}
-            >
-              Change Password
-            </button>
-          </div>
-        </div>
+      {/* Profile */}
+      <div className="card shadow-sm p-3 mb-4">
+        <h5 className="pb-2">
+          Profile Info{" "}
+          <Link
+            to={"/admin"}
+            className={`btn btn-warning float-end ${
+              currentUser.admin ? "d-block" : "d-none"
+            }`}
+          >
+            Admin Panel
+          </Link>{" "}
+        </h5>
+        <p>
+          <strong>Name:</strong> {currentUser?.name?.toUpperCase() || ""}
+        </p>
+        <p>
+          <strong>Email:</strong> {currentUser?.email || ""}
+        </p>
+        <p>
+          <strong>Store:</strong> {currentUser?.shopName || ""}
+          <span
+            className={`badge ${
+              currentUser?.isVerified === true
+                ? "bg-success"
+                : "bg-warning text-dark"
+            } ms-2`}
+          >
+            {currentUser?.isVerified === true
+              ? "Verified✔"
+              : "Under verification"}
+          </span>
+        </p>
       </div>
 
-      {/* Product Section */}
+      {/* Products */}
       <div className="card shadow-sm p-3 mb-4">
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h5 className="mb-0">My Products</h5>
@@ -90,122 +146,129 @@ const Seller = () => {
             + Add Product
           </Link>
         </div>
-        <table className="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>Stock</th>
-              <th>Price</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((item, idx) => (
-              <tr key={idx}>
-                <td>{item.name}</td>
-                <td>{item.stock}</td>
-                <td>₹{item.price}</td>
-                <td>
-                  <span className="badge bg-success">{item.status}</span>
-                </td>
-                <td>
-                  <Link
-                    to="/edit"
-                    className="btn btn-sm btn-outline-primary me-1"
-                  >
-                    Edit
-                  </Link>
-                  <button
-                    className="btn btn-sm btn-outline-danger"
-                    onClick={() => handleRemoveProduct(item)}
-                  >
-                    Remove
-                  </button>
-                </td>
+        <div className="table-responsive">
+          <table className="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Stock</th>
+                <th>Price</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {products.length ? (
+                products
+                  .slice()
+                  .reverse()
+                  .map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.title}</td>
+                      <td>{item.stock}</td>
+                      <td>₹{item.price}</td>
+                      <td>
+                        <Link
+                          to={`/edit/${item.id}`}
+                          className="btn btn-sm btn-outline-primary me-1"
+                        >
+                          Edit
+                        </Link>
+                        <button
+                          className="btn btn-sm btn-outline-danger"
+                          onClick={() => handleRemoveProduct(item)}
+                        >
+                          Remove
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="text-center">
+                    No products found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Orders Section */}
       <div className="card shadow-sm p-3 mb-4">
         <h5>Recent Orders</h5>
-        <table className="table table-bordered">
-          <thead>
-            <tr>
-              <th>Order ID</th>
-              <th>Product</th>
-              <th>Customer</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((order, idx) => (
-              <tr key={idx}>
-                <td>{order.id}</td>
-                <td>{order.product}</td>
-                <td>{order.customer}</td>
-                <td>
-                  <span className="badge bg-info text-dark">
-                    {order.status}
-                  </span>
-                </td>
-                <td>
-                  <button
-                    className="btn btn-sm btn-outline-secondary"
-                    onClick={() => handleViewOrder(order)}
-                  >
-                    View
-                  </button>
-                </td>
+        <div className="table-responsive">
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Product</th>
+                <th>Total</th>
+                <th>Quantity</th>
+                <th>Status</th>
+                <th>Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {orders.length ? (
+                orders
+                  .slice()
+                  .reverse()
+                  .map((order) => (
+                    <tr key={order.id}>
+                      <td>{order.id}</td>
+                      <td>{order.title}</td>
+                      <td>{order.total}</td>
+                      <td>{order.quantity}</td>
+                      <td>
+                        <span
+                          className={`badge  ${
+                            order.status === "pending"
+                              ? "bg-warning text-dark"
+                              : order.status === "delivered"
+                              ? "bg-success text-light"
+                              : order.status.toLowerCase() === "cancelled"
+                              ? "bg-danger text-light"
+                              : "bg-info"
+                          }`}
+                        >
+                          {order.status.toUpperCase()}
+                        </span>
+                      </td>
+
+                      <td>
+                        <button
+                          className="btn btn-sm btn-outline-secondary"
+                          onClick={() => {
+                            setSelectedOrder(order);
+                            setShowOrderModal(true);
+                          }}
+                        >
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="text-center">
+                    No orders found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Logout */}
       <div className="text-end">
-        <button className="btn btn-outline-danger" onClick={handleLogout}>Logout</button>
+        <button className="btn btn-outline-danger" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
 
-      {/* Password Modal */}
-      {showPasswordModal && (
-        <div className="custom-modal">
-          <div className="modal-content p-4">
-            <h5>Change Password</h5>
-            <input
-              type="password"
-              className="form-control mb-2"
-              placeholder="Current Password"
-            />
-            <input
-              type="password"
-              className="form-control mb-2"
-              placeholder="New Password"
-            />
-            <input
-              type="password"
-              className="form-control mb-2"
-              placeholder="Confirm Password"
-            />
-            <div className="text-end">
-              <button
-                className="btn btn-sm btn-secondary me-2"
-                onClick={() => setShowPasswordModal(false)}
-              >
-                Cancel
-              </button>
-              <button className="btn btn-sm btn-success">Update</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Order View Modal */}
+      {/* Order Modal */}
       {showOrderModal && selectedOrder && (
         <div className="custom-modal">
           <div className="modal-content p-4">
@@ -214,10 +277,10 @@ const Seller = () => {
               <strong>Order ID:</strong> {selectedOrder.id}
             </p>
             <p>
-              <strong>Product:</strong> {selectedOrder.product}
+              <strong>Product:</strong> {selectedOrder.title}
             </p>
             <p>
-              <strong>Customer:</strong> {selectedOrder.customer}
+              <strong>Total:</strong> {selectedOrder.total}
             </p>
             <p>
               <strong>Status:</strong> {selectedOrder.status}
@@ -229,7 +292,13 @@ const Seller = () => {
               >
                 Close
               </button>
-              <button className="btn btn-sm btn-success">Deliver Order</button>
+              <button
+                className="btn btn-sm btn-success"
+                onClick={() => handleDelever(selectedOrder.id)}
+                disabled={selectedOrder.status === "cancelled"}
+              >
+                Deliver Order
+              </button>
             </div>
           </div>
         </div>
@@ -242,7 +311,7 @@ const Seller = () => {
             <h5>Remove Product</h5>
             <p>
               Are you sure you want to remove{" "}
-              <strong>{productToRemove.name}</strong>?
+              <strong>{productToRemove.title}</strong>?
             </p>
             <div className="text-end">
               <button
@@ -251,7 +320,12 @@ const Seller = () => {
               >
                 Cancel
               </button>
-              <button className="btn btn-sm btn-danger">Yes, Remove</button>
+              <button
+                className="btn btn-sm btn-danger"
+                onClick={removeProductConfirm}
+              >
+                Yes, Remove
+              </button>
             </div>
           </div>
         </div>

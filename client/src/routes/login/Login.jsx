@@ -25,7 +25,7 @@ const Login = () => {
         password,
         role: activeTab, // 'customer' or 'seller'
       });
-
+     
       setSuccess("Login successful!");
       localStorage.setItem("token", res.data.token); // optionally store token
       localStorage.setItem("user", JSON.stringify(res.data.user));
@@ -41,8 +41,8 @@ const Login = () => {
   };
 
   return (
-    <div className="container py-3 " style={{ maxWidth: "400px" }}>
-      <h2 className="mb-4 fw-bold mt-4 text-center fs-1">LOGIN</h2>
+    <div className="container min-vh-100 pt-md-4 mt-md-5 mt-5" style={{ maxWidth: "400px" }}>
+      <h2 className="mb-4 fw-bold  text-center fs-1">LOGIN</h2>
       <div className="bg-light py-5 px-3 shadow rounded-4">
         <div className="d-flex justify-content-around mb-4">
           <button

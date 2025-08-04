@@ -4,7 +4,7 @@ import prisma from "../lib/prisma.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = "1d";
-       
+
 // Register (common for both roles)
 export const register = async (req, res) => {
   try {
@@ -40,7 +40,9 @@ export const login = async (req, res) => {
     const { email, password, role } = req.body;
 
     if (!email || !password || !role) {
-      return res.status(400).json({ message: "Email, password and role are required." });
+      return res
+        .status(400)
+        .json({ message: "Email, password and role are required." });
     }
 
     const model = role === "seller" ? prisma.seller : prisma.customer;
@@ -58,15 +60,22 @@ export const login = async (req, res) => {
     const token = jwt.sign({ userId: user.id, role }, JWT_SECRET, {
       expiresIn: JWT_EXPIRES_IN,
     });
+    // Send token as HTTP-only cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      sameSite: "none",
+    });
 
     // Add role to the user object
     const userWithRole = { ...user, role };
 
-    res.status(200).json({ message: "Login successful", token, user: userWithRole });
+    res
+      .status(200)
+      .json({ message: "Login successful", token, user: userWithRole });
   } catch (error) {
     console.error("Login Error:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
-

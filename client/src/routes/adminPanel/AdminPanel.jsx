@@ -1,39 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
+import { useLoaderData } from "react-router-dom";
+import apiRequest from "../../lib/apiRequest.js"; // adjust path based on your structure
 
 const AdminPanel = () => {
-  const [customers] = useState([
-    { id: 1, name: "Arun", email: "arun@example.com" },
-    { id: 2, name: "Priya", email: "priya@example.com" },
-  ]);
+  const { users, products } = useLoaderData();
 
-  const [sellers, setSellers] = useState([
-    { id: 1, name: "Mani Store", email: "mani@store.com", verified: false },
-    { id: 2, name: "Siva Mart", email: "siva@mart.com", verified: true },
-  ]);
+  // Filter users based on role
+  const customers = users.filter((user) => user.role === "customer");
+  const sellers = users.filter((user) => user.role === "seller");
 
-  const [products] = useState([
-    {
-      id: 1,
-      name: "Rift Gogan Sofa Large",
-      seller: "Mani Store",
-      price: 2499,
-      stock: 10,
-    },
-    {
-      id: 2,
-      name: "Maple Wooden Dining Set",
-      seller: "Siva Mart",
-      price: 1299,
-      stock: 5,
-    },
-  ]);
-
-  const handleVerify = (id) => {
-    const updated = sellers.map((seller) =>
-      seller.id === id ? { ...seller, verified: true } : seller
-    );
-    setSellers(updated);
+  const handleVerify = async (sellerId) => {
+    try {
+      await apiRequest.put(`/user/verify-seller/${sellerId}`);
+      window.location.reload(); // reload to update verification status
+    } catch (error) {
+      console.error("Verification failed:", error);
+    }
   };
+
+  console.log(customers, sellers, products);
 
   return (
     <div className="container py-4">
@@ -42,97 +27,105 @@ const AdminPanel = () => {
       {/* Customers Table */}
       <div className="card shadow-sm rounded-3 mb-4 p-3">
         <h5 className="mb-3">Customers</h5>
-        <table className="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th>#ID</th>
-              <th>Name</th>
-              <th>Email</th>
-            </tr>
-          </thead>
-          <tbody>
-            {customers.map((cust) => (
-              <tr key={cust.id}>
-                <td>{cust.id}</td>
-                <td>{cust.name}</td>
-                <td>{cust.email}</td>
+        <div className="table-responsive">
+          <table className="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>#ID</th>
+                <th>Name</th>
+                <th>Email</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {customers.map((cust) => (
+                <tr key={cust.id}>
+                  <td>{cust.id}</td>
+                  <td>{cust.name}</td>
+                  <td>{cust.email}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Sellers Table */}
       <div className="card shadow-sm rounded-3 mb-4 p-3">
         <h5 className="mb-3">Sellers</h5>
-        <table className="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th>#ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sellers.map((seller) => (
-              <tr key={seller.id}>
-                <td>{seller.id}</td>
-                <td>{seller.name}</td>
-                <td>{seller.email}</td>
-                <td>
-                  {seller.verified ? (
-                    <span className="badge bg-success">Verified</span>
-                  ) : (
-                    <span className="badge bg-danger">Not Verified</span>
-                  )}
-                </td>
-                <td>
-                  {!seller.verified ? (
-                    <button
-                      className="btn btn-sm btn-primary"
-                      onClick={() => handleVerify(seller.id)}
-                    >
-                      Verify Seller
-                    </button>
-                  ) : (
-                    <button className="btn btn-sm btn-secondary" disabled>
-                      Verified
-                    </button>
-                  )}
-                </td>
+        <div className="table-responsive">
+          <table className="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>#ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {sellers.map((seller) => (
+                <tr key={seller.id}>
+                  <td>{seller.id}</td>
+                  <td>{seller.name}</td>
+                  <td>{seller.email}</td>
+                  <td>
+                    {seller.isVerified ? (
+                      <span className="badge bg-success">Verified</span>
+                    ) : (
+                      <span className="badge bg-danger">Not Verified</span>
+                    )}
+                  </td>
+                  <td>
+                    {!seller.verified ? (
+                      <button
+                        className="btn btn-sm btn-primary"
+                        onClick={() => handleVerify(seller.id)}
+                      >
+                        Verify Seller
+                      </button>
+                    ) : (
+                      <button className="btn btn-sm btn-secondary" disabled>
+                        Verified
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Products Table */}
       <div className="card shadow-sm rounded-3 mb-4 p-3">
         <h5 className="mb-3">Products</h5>
-        <table className="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th>#ID</th>
-              <th>Name</th>
-              <th>Seller</th>
-              <th>Price (₹)</th>
-              <th>Stock</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((prod) => (
-              <tr key={prod.id}>
-                <td>{prod.id}</td>
-                <td>{prod.name}</td>
-                <td>{prod.seller}</td>
-                <td>{prod.price}</td>
-                <td>{prod.stock}</td>
+        <div className="table-responsive">
+          <table className="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>#ID</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Store Name</th>
+                <th>Price (₹)</th>
+                <th>Stock</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {products.map((prod) => (
+                <tr key={prod.id}>
+                  <td>{prod.id}</td>
+                  <td>{prod.title}</td>
+                  <td>{prod.category}</td>
+                  <td>{prod.seller.shopName}</td>
+                  <td>{prod.price}</td>
+                  <td>{prod.stock}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
