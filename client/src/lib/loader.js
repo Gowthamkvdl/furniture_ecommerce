@@ -42,7 +42,6 @@ export const customerLoader = async () => {
   }
 };
 
-
 export const productsLoader = async ({ params }) => {
   const { id } = params;
   try {
@@ -66,21 +65,61 @@ export const singleProductLoader = async ({ params }) => {
   }
 };
 
-
 export const adminLoader = async () => {
   try {
-
-    const [userRes, prodRes] = await Promise.all([
+    const [userRes, prodRes, revRes] = await Promise.all([
       apiRequest.get("/user/"),
       apiRequest.get("/product/all"),
+      apiRequest.get("/product/reviews"),
     ]);
 
     return {
       users: userRes.data,
-      products: prodRes.data,
+      products: prodRes.data,  
+      reviews: revRes.data,
     };
   } catch (error) {
     console.error("Admin loader failed:", error);
     throw new Response("Failed to load admin data", { status: 500 });
+  }
+};
+
+export const adminCustomerLoader = async () => {
+  try {
+    const customer = await apiRequest.get("/user/");
+    return customer.data;
+  } catch (error) {
+    console.error("adminCustomerLoader failed:", error);
+    throw new Response("Failed to load adminCustomerLoader", { status: 500 });
+  }
+};
+
+export const adminSellerLoader = async () => {
+  try {
+    const seller = await apiRequest.get("/user/");
+    return seller.data;
+  } catch (error) {
+    console.error("adminSellerLoader failed:", error);
+    throw new Response("Failed to load adminSellerLoader", { status: 500 });
+  }
+};
+
+export const adminProductLoader = async () => {
+  try {
+    const products = await apiRequest.get("/product/all");
+    return products.data;
+  } catch (error) {
+    console.error("adminProductLoader failed:", error);
+    throw new Response("Failed to load adminProductLoader", { status: 500 });
+  }
+};
+
+export const adminReviewsLoader = async () => {
+  try {
+    const reviews = await apiRequest.get("/product/reviews");
+    return reviews.data;
+  } catch (error) {
+    console.error("adminReviewsLoader failed:", error);
+    throw new Response("Failed to load adminReviewsLoader", { status: 500 });
   }
 };

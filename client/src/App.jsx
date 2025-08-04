@@ -17,13 +17,21 @@ import Edit from "./routes/edit/Edit";
 import ProductPage from "./routes/productPage/ProductPage";
 import AdminPanel from "./routes/adminPanel/AdminPanel";
 import {
+  adminCustomerLoader,
   adminLoader,
+  adminProductLoader,
+  adminReviewsLoader,
+  adminSellerLoader,
   customerLoader,
   productsLoader,
   sellerLoader,
   shopLoader,
   singleProductLoader,
 } from "./lib/loader.js";
+import AdminCustomers from "./routes/adminPanel/adminCustomers/AdminCustomers.jsx";
+import AdminSellers from "./routes/adminPanel/adminSellers/AdminSellers.jsx";
+import AdminProducts from "./routes/adminPanel/adminProducts/AdminProducts.jsx";
+import AdminReviews from "./routes/adminPanel/adminReviews/AdminReviews.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -96,6 +104,26 @@ function App() {
           path: "",
           element: <AdminPanel />,
           loader: adminLoader,
+        },
+        {
+          path: "products",
+          element: <AdminProducts />,
+          loader: adminProductLoader,
+        },
+        {
+          path: "customers",
+          element: <AdminCustomers />,
+          loader: adminCustomerLoader,
+        },
+        {
+          path: "sellers",
+          element: <AdminSellers />, 
+          loader: adminSellerLoader,
+        },
+        {
+          path: "reviews",
+          element: <AdminReviews/>, 
+          loader: adminReviewsLoader,
         },
       ],
     },

@@ -1,132 +1,83 @@
 import React from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, Link } from "react-router-dom";
 import apiRequest from "../../lib/apiRequest.js"; // adjust path based on your structure
 
 const AdminPanel = () => {
-  const { users, products } = useLoaderData();
+  const { users, products, reviews } = useLoaderData();
 
   // Filter users based on role
   const customers = users.filter((user) => user.role === "customer");
   const sellers = users.filter((user) => user.role === "seller");
 
-  const handleVerify = async (sellerId) => {
-    try {
-      await apiRequest.put(`/user/verify-seller/${sellerId}`);
-      window.location.reload(); // reload to update verification status
-    } catch (error) {
-      console.error("Verification failed:", error);
-    }
-  };
-
-  console.log(customers, sellers, products);
-
   return (
-    <div className="container py-4">
-      <h3 className="mb-4">Admin Dashboard</h3>
+    <div className="container mt-md-5 py-md-4">
+      <h3 className="mb-4 mt-md-3">Admin Dashboard</h3>
+      
+      {/* Stats Section: Display the number of customers and sellers */}
+      <div className="row">
+        {/* Customers Card */}
+        <div className="col-md-6 col-lg-4 mb-3">
+          <div className="card shadow-sm p-3 text-center">
+            <h5>Customers</h5>
+            <Link to="/admin/customers" className="h1 text-decoration-none text-primary">
+              {customers.length}
+            </Link>
+            <p>
+              <Link to="/admin/customers" className="text-decoration-none text-secondary">
+                Click here to view the list of customers
+              </Link>
+            </p>
+          </div>
+        </div>
 
-      {/* Customers Table */}
-      <div className="card shadow-sm rounded-3 mb-4 p-3">
-        <h5 className="mb-3">Customers</h5>
-        <div className="table-responsive">
-          <table className="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th>#ID</th>
-                <th>Name</th>
-                <th>Email</th>
-              </tr>
-            </thead>
-            <tbody>
-              {customers.map((cust) => (
-                <tr key={cust.id}>
-                  <td>{cust.id}</td>
-                  <td>{cust.name}</td>
-                  <td>{cust.email}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {/* Sellers Card */}
+        <div className="col-md-6 col-lg-4 mb-3">
+          <div className="card shadow-sm p-3 text-center">
+            <h5>Sellers</h5>
+            <Link to="/admin/sellers" className="h1 text-decoration-none text-primary">
+              {sellers.length}
+            </Link>
+            <p>
+              <Link to="/admin/sellers" className="text-decoration-none text-secondary">
+                Click here to view the list of sellers
+              </Link>
+            </p>
+          </div>
+        </div>
+
+        {/* Products Card */}
+        <div className="col-md-6 col-lg-4 mb-3">
+          <div className="card shadow-sm p-3 text-center">
+            <h5>Products</h5>
+            <Link to="/admin/products" className="h1 text-decoration-none text-primary">
+              {products.length}
+            </Link>
+            <p>
+              <Link to="/admin/products" className="text-decoration-none text-secondary">
+                Click here to view the list of products
+              </Link>
+            </p>
+          </div>
+        </div>
+
+
+        {/* Reviews Card */}
+        <div className="col-md-6 col-lg-4 mb-3">
+          <div className="card shadow-sm p-3 text-center">
+            <h5>Reviews</h5>
+            <Link to="/admin/reviews" className="h1 text-decoration-none text-primary">
+              {reviews.length} 
+            </Link> 
+            <p>
+              <Link to="/admin/reviews" className="text-decoration-none text-secondary">
+                Click here to view the list of Reviews
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Sellers Table */}
-      <div className="card shadow-sm rounded-3 mb-4 p-3">
-        <h5 className="mb-3">Sellers</h5>
-        <div className="table-responsive">
-          <table className="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th>#ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sellers.map((seller) => (
-                <tr key={seller.id}>
-                  <td>{seller.id}</td>
-                  <td>{seller.name}</td>
-                  <td>{seller.email}</td>
-                  <td>
-                    {seller.isVerified ? (
-                      <span className="badge bg-success">Verified</span>
-                    ) : (
-                      <span className="badge bg-danger">Not Verified</span>
-                    )}
-                  </td>
-                  <td>
-                    {!seller.verified ? (
-                      <button
-                        className="btn btn-sm btn-primary"
-                        onClick={() => handleVerify(seller.id)}
-                      >
-                        Verify Seller
-                      </button>
-                    ) : (
-                      <button className="btn btn-sm btn-secondary" disabled>
-                        Verified
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Products Table */}
-      <div className="card shadow-sm rounded-3 mb-4 p-3">
-        <h5 className="mb-3">Products</h5>
-        <div className="table-responsive">
-          <table className="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th>#ID</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Store Name</th>
-                <th>Price (₹)</th>
-                <th>Stock</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((prod) => (
-                <tr key={prod.id}>
-                  <td>{prod.id}</td>
-                  <td>{prod.title}</td>
-                  <td>{prod.category}</td>
-                  <td>{prod.seller.shopName}</td>
-                  <td>{prod.price}</td>
-                  <td>{prod.stock}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      {/* You can keep your tables for customers, sellers, and products here if necessary */}
     </div>
   );
 };

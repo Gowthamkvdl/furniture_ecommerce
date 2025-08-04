@@ -237,3 +237,23 @@ export const addReview = async (req, res) => {
       .json({ message: "Something went wrong while submitting the review." });
   }
 };
+
+
+export const getReviews = async (req, res) => {
+  try {
+    const reviews = await prisma.review.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        product: true,   // optional: include related product details
+        customer: true,  // optional: include related customer info
+      },
+    });
+
+    res.status(200).json(reviews);
+  } catch (err) {
+    console.error("Error fetching reviews:", err);
+    res.status(500).json({ error: "Failed to fetch reviews" });
+  }
+};
