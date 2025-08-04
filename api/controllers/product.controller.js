@@ -25,15 +25,10 @@ export const addProduct = [
       const imagePath = req.file ? `/uploads/${req.file.filename}` : "";
 
       // Check if the seller exists and is verified
-      const seller = await prisma.user.findUnique({
+      const seller = await prisma.seller.findUnique({
         where: { id: sellerId },
       });
 
-      if (!seller || seller.role !== "seller") {
-        return res
-          .status(403)
-          .json({ message: "Only sellers can add products." });
-      }
 
       if (!seller.isVerified) {
         return res
