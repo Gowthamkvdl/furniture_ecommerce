@@ -7,12 +7,12 @@ const AdminProducts = () => {
 
   return (
     <div className="container mt-md-5 py-md-4">
-      <h3 className="mb-4 mt-md-3">Customers List</h3>
+      <h3 className="mb-4 mt-md-3">Products List</h3>
  
       {/* Products Table */}
       <div className="card shadow-sm rounded-3 mb-4 p-3">
         <h5 className="mb-3">Products</h5>
-        <div className="table-responsive">
+        <div className="table-responsive"> 
           <table className="table table-bordered table-striped">
             <thead>
               <tr>

@@ -8,7 +8,7 @@ const AdminReviews = () => {
   console.log(reviews)
 
   return (
-    <div className="container mt-md-5 py-md-4">
+    <div className="container mt-md-5 py-md-4"> 
       <h3 className="mb-4 mt-md-3">Reviews List</h3>
 
       {/* reviews Table */}

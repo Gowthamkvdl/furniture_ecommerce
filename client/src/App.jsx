@@ -32,6 +32,11 @@ import AdminCustomers from "./routes/adminPanel/adminCustomers/AdminCustomers.js
 import AdminSellers from "./routes/adminPanel/adminSellers/AdminSellers.jsx";
 import AdminProducts from "./routes/adminPanel/adminProducts/AdminProducts.jsx";
 import AdminReviews from "./routes/adminPanel/adminReviews/AdminReviews.jsx";
+import SellerProducts from "./routes/seller/sellerProducts/SellerProducts.jsx";
+import SellerOrders from "./routes/seller/sellerOrders/SellerOrders.jsx";
+import SellerReviews from "./routes/seller/sellerReviews/SellerReviews.jsx";
+import CustomerOrders from "./routes/customer/customerOrders/CustomerOrders.jsx";
+import CustomerReviews from "./routes/customer/customerReviews/CustomerReviews.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -85,6 +90,21 @@ function App() {
           loader: sellerLoader,
         },
         {
+          path: "/seller/products",
+          element: <SellerProducts />,
+          loader: sellerLoader,
+        },
+        {
+          path: "/seller/orders",
+          element: <SellerOrders />,
+          loader: sellerLoader,
+        },
+        {
+          path: "/seller/reviews",
+          element: <SellerReviews />,
+          loader: adminReviewsLoader,
+        },
+        {
           path: "/edit/:id",
           element: <Edit />,
           loader: productsLoader,
@@ -93,6 +113,16 @@ function App() {
           path: "/customer",
           element: <Customer />,
           loader: customerLoader,
+        },
+        {
+          path: "/customer/orders",
+          element: <CustomerOrders />,
+          loader: customerLoader,
+        },
+        {
+          path: "/customer/reviews",
+          element: <CustomerReviews />,
+          loader: adminReviewsLoader,
         },
       ],
     },

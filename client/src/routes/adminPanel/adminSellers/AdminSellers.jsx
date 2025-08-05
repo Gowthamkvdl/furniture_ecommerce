@@ -15,7 +15,7 @@ const AdminSellers = () => {
   };
   return (
     <div className="container mt-md-5 py-md-4">   
-      <h3 className="mb-4 mt-md-3">Customers List</h3>
+      <h3 className="mb-4 mt-md-3">Sellers List</h3> 
 
       <div className="card shadow-sm rounded-3 mb-4 p-3">
         <h5 className="mb-3">Sellers</h5>

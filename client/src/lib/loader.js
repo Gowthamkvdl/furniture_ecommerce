@@ -18,8 +18,14 @@ export const sellerLoader = async () => {
       return { error: "unauthorized" };
     }
 
-    const res = await apiRequest.get(`/user/seller/${user.id}`);
-    return res.data;
+    const [seller, reviews] = await Promise.all([
+      apiRequest.get(`/user/seller/${user.id}`),
+      apiRequest.get("/product/reviews"),
+    ]);
+    return {
+      seller: seller.data,
+      reviews: reviews.data,
+    };
   } catch (err) {
     console.error("Failed to load seller:", err);
     throw new Response("Failed to load seller", { status: 500 });
@@ -33,9 +39,14 @@ export const customerLoader = async () => {
     if (!user || user.role !== "customer") {
       return { error: "unauthorized" };
     }
-
-    const res = await apiRequest.get(`/user/customer/${user.id}`);
-    return res.data;
+    const [customer, reviews] = await Promise.all([
+      apiRequest.get(`/user/customer/${user.id}`),
+      apiRequest.get("/product/reviews"),
+    ]);
+    return {
+      customer: customer.data,
+      reviews: reviews.data,
+    };
   } catch (err) {
     console.error("Failed to load customer:", err);
     return { error: "server_error" };
@@ -75,7 +86,7 @@ export const adminLoader = async () => {
 
     return {
       users: userRes.data,
-      products: prodRes.data,  
+      products: prodRes.data,
       reviews: revRes.data,
     };
   } catch (error) {

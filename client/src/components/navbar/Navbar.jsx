@@ -5,12 +5,15 @@ import { useLocation, Link } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 import ScrollToTop from "../scrollToTop/ScrollToTop";
 import { AuthContext } from "../../context/AuthContext";
+import { useEffect } from "react";
 
 const Navbar = () => {
   const location = useLocation();
   const isActive = (path) => (location.pathname === path ? "active" : "");
   const { currentUser, updateUser } = useContext(AuthContext);
-
+  useEffect(() => {
+    // Whenever currentUser changes, this effect will run and update the navbar
+  }, [currentUser]); // Re-run this effect when currentUser changes
   return (
     <div className="d-flex justify-content-center">
       <ScrollToTop />

@@ -167,7 +167,7 @@ export const deleteProduct = async (req, res) => {
       const imagePath = `public${existingProduct.image}`;
       try {
         fs.unlinkSync(imagePath);
-      } catch (err) {
+      } catch (err) { 
         console.warn("Image deletion failed:", err.message);
       }
     }

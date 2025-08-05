@@ -7,14 +7,15 @@ datasource db {
   url      = env("DB_URL")
 }
 
+
 model Customer {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
-  orders    Order[]
-  reviews  Review[]
+  orders    Order[]  // No onDelete here
+  reviews   Review[] // No onDelete here
 }
 
 model Seller {
@@ -25,10 +26,9 @@ model Seller {
   password   String
   isVerified Boolean  @default(false)
   admin      Boolean  @default(false)
-  products   Product[]
+  products   Product[]  // No onDelete here
   createdAt  DateTime @default(now())
-  orders    Order[]
-
+  orders     Order[]   // No onDelete here
 }
 
 model Product {
@@ -43,8 +43,8 @@ model Product {
   seller      Seller   @relation(fields: [sellerId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  orders      Order[]
-  reviews     Review[]
+  orders      Order[]  // No onDelete here
+  reviews     Review[] // No onDelete here
 }
 
 model Order {
@@ -58,23 +58,18 @@ model Order {
   total       Float
   createdAt   DateTime @default(now())
   title       String
-  customer    Customer @relation(fields: [customerId], references: [id])
-  seller      Seller   @relation(fields: [sellerId], references: [id])
-  product     Product  @relation(fields: [productId], references: [id])
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)  // Cascade here
+  seller      Seller   @relation(fields: [sellerId], references: [id], onDelete: Cascade)    // Cascade here
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)   // Cascade here
 }
-
 
 model Review {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   comment       String
   createdAt     DateTime @default(now())
-  customerName  String 
-
-  // Foreign    Keys
+  customerName  String
   customerId    String
   productId     String
-
-  // Relations
-  customer      Customer     @relation(fields: [customerId], references: [id])
-  product       Product  @relation(fields: [productId], references: [id])
+  customer      Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)  // Cascade here
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)   // Cascade here
 }
