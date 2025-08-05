@@ -21,7 +21,7 @@ const Product = () => {
   });
 
   return (
-    <div className="container py-5">
+    <div className="container py-5 min-vh-100">
       <h2 className="mb-4 fw-bold">Our Products</h2>
 
       {/* Search and Filter Section */}
