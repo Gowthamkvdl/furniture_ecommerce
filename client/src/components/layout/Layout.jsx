@@ -1,5 +1,5 @@
 import React from "react";
-import "./layout.css"
+import "./layout.css";
 import { Navigate, Outlet } from "react-router-dom";
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
@@ -8,7 +8,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
 export const Layout = () => {
-  return ( 
+  return (
     <div>
       <div className="container">
         <div className="mt-md-5"></div>
@@ -36,21 +36,20 @@ export const AuthLayout = () => {
     <div>
       <div className="container">
         <div className="mt-md-5"></div>
-        <Navbar />  
+        <Navbar />
         <div className="mt-md-5 mb-md-5"></div>
         <Outlet />
+        <Footer />
+        <div className="mb-md-5"></div>
       </div>
-      <Footer />
     </div>
   );
 };
 
-
-
 export const AdminLayout = () => {
   const { currentUser } = useContext(AuthContext);
   console.log(currentUser);
- 
+
   if (!currentUser) {
     alert("Access denied: Please log in to access this page.");
     return <Navigate to="/" />;
@@ -67,8 +66,8 @@ export const AdminLayout = () => {
       <Navbar />
       <div className="container flex-grow-1 py-4">
         <Outlet />
-      </div>
-      <Footer />
+        <Footer />
+        <div className="mb-md-5"></div>      </div>
     </div>
   );
 };

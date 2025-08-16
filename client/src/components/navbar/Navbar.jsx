@@ -83,7 +83,7 @@ const Navbar = () => {
                   <span className="nav-text">Categories</span>
                 </HashLink>
               </li>
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <HashLink
                   smooth
                   to="/#contact"
@@ -109,7 +109,7 @@ const Navbar = () => {
                   </svg>
                   <span className="nav-text">Contact</span>
                 </HashLink>
-              </li>
+              </li> */}
               <li className="nav-item">
                 <Link
                   className={`nav-link shadow-none d-flex flex-column align-items-center mb-0 pb-0 ${isActive(
@@ -142,7 +142,11 @@ const Navbar = () => {
                     currentUser
                       ? currentUser.role === "customer"
                         ? "/customer"
-                        : "/seller"
+                        : currentUser.role === "seller"
+                        ? "/seller"
+                        : currentUser.role === "admin"
+                        ? "/admin"
+                        : "/"
                       : "/register"
                   }
                 >

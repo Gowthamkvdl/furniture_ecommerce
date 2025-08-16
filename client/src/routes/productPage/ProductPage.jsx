@@ -15,6 +15,17 @@ const ProductPage = () => {
   const [reviews, setReviews] = useState(product.reviews || []);
   const [showOrderModal, setShowOrderModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
+  // inside ProductPage component
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [zip, setZip] = useState("");
+  const [country, setCountry] = useState("");
+
+  // helper to generate full address
+  const getFullAddress = () => {
+    return `${street}, ${city}, ${state} - ${zip}, ${country}`.trim();
+  };
 
   const imageUrl = product.image?.startsWith("http")
     ? product.image
@@ -31,15 +42,21 @@ const ProductPage = () => {
     if (currentUser.role === "seller") {
       return setError("❌ Sellers cannot place orders.");
     }
-    if (!address.trim()) {
-      return setError("❌ Please enter delivery address.");
+    if (
+      !street.trim() ||
+      !city.trim() ||
+      !state.trim() ||
+      !zip.trim() ||
+      !country.trim()
+    ) {
+      return setError("❌ Please fill all address fields.");
     }
     try {
       await apiRequest.post("/order", {
         customerId: currentUser.id,
         productId: product.id,
         quantity,
-        address,
+        address: getFullAddress(),
         title: product.title,
       });
       setOrdered(true);
@@ -153,19 +170,66 @@ const ProductPage = () => {
 
           <div className="mb-3">
             <label className="fw-semibold">Delivery Address</label>
-            <textarea
-              rows={2}
-              className="form-control"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-            />
+            <div className="row g-2">
+              <div className="col-md-12">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Street Address"
+                  value={street}
+                  onChange={(e) => setStreet(e.target.value)}
+                />
+              </div>
+              <div className="col-md-6">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="City"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                />
+              </div>
+              <div className="col-md-6">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="State"
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
+                />
+              </div>
+              <div className="col-md-6">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="ZIP Code"
+                  value={zip}
+                  onChange={(e) => setZip(e.target.value)}
+                />
+              </div>
+              <div className="col-md-6">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Country"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                />
+              </div>
+            </div>
           </div>
 
           <button
             className="btn btn-dark px-4"
             onClick={() => {
-              if (!address.trim()) {
-                return setError("❌ Please enter delivery address.");
+              if (
+                !street.trim() ||
+                !city.trim() ||
+                !state.trim() ||
+                !zip.trim() ||
+                !country.trim()
+              ) {
+                return setError("❌ Please fill all address fields.");
               }
               setError("");
               setShowOrderModal(true);
@@ -238,7 +302,7 @@ const ProductPage = () => {
                   <strong>Total:</strong> ₹{product.price * quantity}
                 </p>
                 <p>
-                  <strong>Delivery Address:</strong> {address}
+                  <strong>Delivery Address:</strong> {getFullAddress()}
                 </p>
               </div>
               <div className="modal-footer">

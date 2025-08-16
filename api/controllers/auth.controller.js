@@ -33,7 +33,6 @@ export const register = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
 // Login
 export const login = async (req, res) => {
   try {
@@ -57,9 +56,16 @@ export const login = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials." });
     }
 
-    const token = jwt.sign({ userId: user.id, role }, JWT_SECRET, {
+    // Check if user is admin
+    let finalRole = role;
+    if (user.admin) {
+      finalRole = "admin";
+    }
+
+    const token = jwt.sign({ userId: user.id, role: finalRole }, JWT_SECRET, {
       expiresIn: JWT_EXPIRES_IN,
     });
+
     // Send token as HTTP-only cookie
     res.cookie("token", token, {
       httpOnly: true,
@@ -68,8 +74,8 @@ export const login = async (req, res) => {
       sameSite: "none",
     });
 
-    // Add role to the user object
-    const userWithRole = { ...user, role };
+    // Add finalRole to the user object
+    const userWithRole = { ...user, role: finalRole };
 
     res
       .status(200)
@@ -79,3 +85,4 @@ export const login = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+

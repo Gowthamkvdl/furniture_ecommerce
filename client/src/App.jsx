@@ -37,6 +37,7 @@ import SellerOrders from "./routes/seller/sellerOrders/SellerOrders.jsx";
 import SellerReviews from "./routes/seller/sellerReviews/SellerReviews.jsx";
 import CustomerOrders from "./routes/customer/customerOrders/CustomerOrders.jsx";
 import CustomerReviews from "./routes/customer/customerReviews/CustomerReviews.jsx";
+import AdminLogin from "./routes/adminLogin/AdminLogin.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -56,6 +57,10 @@ function App() {
         {
           path: "/login",
           element: <Login />,
+        },
+        {
+          path: "/admin-login",
+          element: <AdminLogin />,
         },
         {
           path: "/register",

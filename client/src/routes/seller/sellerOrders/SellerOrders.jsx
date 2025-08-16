@@ -128,6 +128,9 @@ const SellerOrders = () => {
               <strong>Total:</strong> {selectedOrder.total}
             </p>
             <p>
+              <strong>Address:</strong> {selectedOrder.address}
+            </p>
+            <p>
               <strong>Status:</strong> {selectedOrder.status}
             </p>
             <div className="text-end">

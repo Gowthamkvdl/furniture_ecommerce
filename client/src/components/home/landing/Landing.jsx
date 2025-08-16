@@ -11,16 +11,24 @@ const Landing = () => {
   return (
     <div className=" " id="landning">
       <div
-        className="hero-section text-center p-5 mt-5 mt-md-0"
-        style={{ backgroundColor: "#ffffffff", borderRadius: "10px" }}
+        className="hero-section rounded-4 text-center p-5 mt-5 mt-md-0"
+        style={{
+          // backgroundImage: `url(${"https://static.vecteezy.com/system/resources/previews/028/885/619/non_2x/modern-banner-background-design-banner-template-with-dynamic-wave-shapes-free-vector.jpg"})`, // 👈 use your banner or another bg
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          // minHeight: "100vh",
+          padding: "2rem 0",
+          background: "linear-gradient(135deg, #E07A5F, #F2CC8F)"
+        }}                                              
       >
         <h1 className="fw-bold">Upgrade Your Home in Style</h1>
         <p className="lead">Discover premium furniture at unbeatable prices</p>
-        <Link to={"/shop"} className="btn btn-warning px-4 py-2 mt-3">
-          Shop New Arrivals
+        <Link to={"/shop"} style={{backgroundColor: "#e67353ff"}} className="btn text-white px-4 py-2 mt-3">
+          Shop New    
         </Link>
       </div>
-  
+
       <div className="row">
         {/* Left Column */}
         <div className="col-12 col-md-6">
@@ -166,7 +174,7 @@ const Landing = () => {
       </div>
       <img
         src={banner}
-        className="w-100 mt-3 box-shadow rounded-5 d-none d-md-block"
+        className="w-100 mt-3 box-shadow rounded-4 d-none d-md-block"
       ></img>
     </div>
   );
