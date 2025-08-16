@@ -68,7 +68,7 @@ const Customer = () => {
               to="/customer/orders"
               className="h1 text-decoration-none text-primary"
             >
-              {orders.length}
+              {orders?.length}
             </Link>
             <p>
               <Link
@@ -88,7 +88,7 @@ const Customer = () => {
               className="h1 text-decoration-none text-primary"
             >
               {
-                data.reviews.filter((rev) => rev.customerId === currentUser.id)
+                data?.reviews?.filter((rev) => rev.customerId === currentUser.id)
                   .length
               }
             </Link>
