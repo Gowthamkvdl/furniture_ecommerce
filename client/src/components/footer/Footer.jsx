@@ -3,9 +3,9 @@ import React from "react";
 const Footer = () => {
   return (
     <footer
-      className="w-100 text-center secondary-300 box-shadow"
+      className="w-100 text-center secondary-300 rounded-top-4 box-shadow"
       style={{
-        padding: ".5rem 0",
+        padding: ".3rem 0",
         color: "#000000ff",
         fontSize: "0.9rem",
         zIndex: 1000,

@@ -12,8 +12,7 @@ const AdminPanel = () => {
   const sellers = users.filter((user) => user.role === "seller");
 
   const handleLogout = () => {
-    navigate("/login");
-
+    navigate("/admin-login");
     // Wait for navigation, then clear session
     setTimeout(() => {
       localStorage.removeItem("user");
