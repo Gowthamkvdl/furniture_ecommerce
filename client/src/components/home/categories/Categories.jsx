@@ -4,7 +4,7 @@ import bedroom from "../../../assets/bedroom.jpg";
 import living from "../../../assets/living.jpg";
 import dining from "../../../assets/dining.jpg";
 
-import "./Categories.css"; // import CSS file
+import "./categories.css"; // import CSS file
 
 const Categories = () => {
   return (
