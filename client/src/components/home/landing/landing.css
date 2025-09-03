@@ -9,3 +9,92 @@
 .box-3 {
   background-color: #e7c9b2;
 }
+/* General smooth transition */
+.hover-card,
+.hover-btn,
+.hover-img,
+.hover-link,
+.hover-badge {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Card hover - lift */
+.hover-card:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Button hover - pop */
+.hover-btn:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* Image hover - zoom + shadow */
+.hover-img:hover {
+  transform: scale(1.08);
+  filter: brightness(1.05) drop-shadow(0 8px 12px rgba(0, 0, 0, 0.3));
+}
+
+
+/* Link hover - underline animation */
+.hover-link {
+  position: relative;
+}
+.hover-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0%;
+  height: 2px;
+  background: currentColor;
+  transition: width 0.3s ease;
+}
+.hover-link:hover::after {
+  width: 100%;
+}
+
+/* Badge hover - small bounce */
+.hover-badge:hover {
+  transform: scale(1.01);
+}
+
+/* Hero background overlay */
+.hero-bg {
+  border-radius: 1rem; /* match rounded-4 */
+  filter: brightness(0.95);
+}
+
+/* Smooth fade/slide animations */
+.animate-fade {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 1s ease forwards;
+}
+.animate-fade-delay {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 1s ease 0.3s forwards;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Button styling */
+.hero-btn {
+  background: #e67353;
+  color: #fff;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(230, 115, 83, 0.4);
+}
+
+.hero-btn:hover {
+  background: #cf5d3e;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(230, 115, 83, 0.6);
+}

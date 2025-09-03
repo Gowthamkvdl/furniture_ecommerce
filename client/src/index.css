@@ -11,16 +11,17 @@
   --primary-800: #004f93;
   --primary-900: #003570;
 
-  /* Secondary: Olive Green */
-  --secondary-100: #f5f8e7;
-  --secondary-200: #e5ecc4;
-  --secondary-300: #d0dd9c;
-  --secondary-400: #b5c572;
-  --secondary-500: #9aad4a;  /* Main Olive Green */
-  --secondary-600: #7e9139;
-  --secondary-700: #64762c;
-  --secondary-800: #4b5a1f;
-  --secondary-900: #343f14;
+  /* Secondary: Warm Brown */
+--secondary-100: #f9f4ef;
+--secondary-200: #e9dfd2;
+--secondary-300: #d3bda7;
+--secondary-400: #b58e66;
+--secondary-500: #8c6239;  /* Main Warm Brown */
+--secondary-600: #734f2e;
+--secondary-700: #5a3d24;
+--secondary-800: #422b1a;
+--secondary-900: #2c1c11;
+
 
 
   /* Neutral */

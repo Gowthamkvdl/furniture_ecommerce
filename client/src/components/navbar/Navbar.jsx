@@ -22,10 +22,10 @@ const Navbar = () => {
         <div className="touristBus d-none d-md-block sidePart">
           <h1 className="title-text m-4 ">Macx Furniture</h1>
         </div>
-        <div>
-          <div
-            className="collapse mb-3 secondary-500 me-md-4 mb-md-0  navbar-collapse box-shadow px-3 rounded-4"
-            id="navbarNav"
+        <div> 
+          <div 
+            className="collapse mb-3 secondary-400 me-md-4 mb-md-0  navbar-collapse box-shadow px-3 rounded-4"
+            id="navbarNav"  
           >
             <ul className="navbar-nav gap-md-4">
               <li className="nav-item ">
