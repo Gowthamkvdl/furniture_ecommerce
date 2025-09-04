@@ -105,8 +105,8 @@ const ProductPage = () => {
         {/* Image */}
         <div className="col-md-6 d-flex justify-content-center align-items-center">
           <img
-            src={imageUrl}
-            alt={product.title}
+            src={`https://furniture-backend-qz6g.onrender.com/${product.imageUrl}`}
+            alt={product.title} 
             className="img-fluid rounded-4 shadow-sm mb-5"
             style={{ maxWidth: "70%" }}
             onError={(e) => {
