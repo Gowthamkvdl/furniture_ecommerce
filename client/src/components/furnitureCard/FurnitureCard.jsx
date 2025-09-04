@@ -19,6 +19,10 @@ const FurnitureCard = ({ price, image, title, shopName, createdAt, id }) => {
           alt={title}
           className="img-fluid rounded" 
           style={{ width: "90%" }} 
+          onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/fallback.png";
+            }}
         /> 
       </div>
 

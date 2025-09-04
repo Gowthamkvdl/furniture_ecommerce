@@ -111,7 +111,7 @@ const ProductPage = () => {
             style={{ maxWidth: "70%" }}
             onError={(e) => {
               e.target.onerror = null;
-              e.target.src = "/fallback.jpg";
+              e.target.src = "/fallback.png";
             }}
           />
         </div>
