@@ -70,7 +70,7 @@ const Product = () => {
               <FurnitureCard
                 title={product.title}
                 price={product.price}
-                image={`http://localhost:3000${product.image}`}
+                image={`https://furniture-backend-qz6g.onrender.com${product.image}`}
                 shopName={product.seller?.shopName || "Unknown Seller"}
                 createdAt={product.createdAt}
                 id={product.id}
