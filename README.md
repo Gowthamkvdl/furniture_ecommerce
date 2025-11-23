@@ -42,3 +42,5 @@ Backend: Node.js, Express.js
 Database: MongoDB + Prisma ORM  
 Authentication: JWT + Protected Routes  
 Hosting: Render  
+
+👉 Live Project: https://furniture-qqlv.onrender.com/
