@@ -4,11 +4,11 @@ E-Commerce App
 
 ✔ Customer Side
 
-Browse & search products 🔍,
-Category filters,
-Place orders withlive status updates,
-Review products (only after delivery ✅),
-Mobile-first responsive UI,
+Browse & search products 🔍,  
+Category filters,  
+Place orders withlive status updates,  
+Review products (only after delivery ✅),  
+Mobile-first responsive UI,  
 
 ✔ Seller Side
 
