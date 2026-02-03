@@ -1,9 +1,14 @@
-import apiRequest from "./apiRequest.js"; // adjust path accordingly
+import apiRequest from "./apiRequest"; // adjust path accordingly
+import { defer } from "react-router-dom";
+
+
 
 export const shopLoader = async () => {
   try {
-    const res = await apiRequest.get("/product/all");
-    return res.data;
+    const resPromise =  apiRequest.get("/product/all");
+    return defer({
+      shopResponse : resPromise
+    });
   } catch (err) {
     console.error("Shop loader failed:", err);
     throw new Response("Failed to load products", { status: 500 });

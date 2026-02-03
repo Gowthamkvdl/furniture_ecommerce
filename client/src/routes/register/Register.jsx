@@ -52,7 +52,7 @@ const Register = () => {
   };
 
   return (
-    <div className="container min-vh-100 pt-md-4  mt-md-5 mt-5" style={{ maxWidth: "450px" }}>
+    <div className="container min-vh-100 pt-md-4 mb-5  mt-md-5 mt-5" style={{ maxWidth: "450px" }}>
       <h2 className="mb-4  fw-bold text-center fs-1">REGISTER</h2>
       <div className="bg-light py-5 px-3 shadow rounded-4">
         <div className="d-flex justify-content-around mb-4">

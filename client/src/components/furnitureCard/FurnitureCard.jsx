@@ -7,7 +7,7 @@ const FurnitureCard = ({ price, image, title, shopName, createdAt, id }) => {
 
   console.log(id)
   return (
-    <div className="border-0 shadow-sm p-3 rounded-4" style={{ backgroundColor: "#f4f3ef" }}>
+    <div className="border-0 shadow-sm p-3 rounded-4  h-100" style={{ backgroundColor: "#f4f3ef" }}>
       <div className="d-flex justify-content-between align-items-center px-1">
         <h6 className="fw-bold text-dark m-0">₹{price}</h6>
         <FaHeart className="text-muted" />

@@ -103,7 +103,7 @@ const ProductPage = () => {
     <div className="container py-5">
       <div className="row mb-4">
         {/* Image */}
-        <div className="col-md-6 d-flex justify-content-center align-items-center">
+        <div className="col-md-6 d-flex justify-content-center align-items-top h-100">
           <img
             src={`https://furniture-backend-qz6g.onrender.com${product.image}`}
             alt={product.title} 
